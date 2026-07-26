@@ -9,9 +9,6 @@ The entire stack (Apache Tomcat web server and MySQL database) is containerized 
 ## 🛠️ Requirements & Tech Stack
 
 * **Docker & Docker Compose** (Required)
-* **Java 21+** (Only if building locally without Docker)
-* **Apache Maven** (Only if building locally without Docker)
-
 ---
 
 ## 🚀 Getting Started (Docker Compose)
