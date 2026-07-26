@@ -23,8 +23,8 @@
         <mysql.version>9.7.0</mysql.version>
         <lombok.version>1.18.46</lombok.version>
         <hikaricp.version>7.1.0</hikaricp.version>
-        <maven.compiler.source>26</maven.compiler.source>
-        <maven.compiler.target>26</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
 
     <dependencies>
