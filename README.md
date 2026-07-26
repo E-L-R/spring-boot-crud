@@ -6,6 +6,14 @@ The entire stack (Apache Tomcat web server and MySQL database) is containerized 
 
 ---
 
+## 🔒 Security & Local Environment Notes
+
+* **Local Configuration:** The database setup (`MYSQL_ALLOW_EMPTY_PASSWORD=yes`) is configured strictly for quick local development, testing, and grading.
+* **Database Isolation:** All services run within an isolated local Docker network and are not exposed to external production environments.
+* **Production Deployment:** For production environments, ensure you replace default local credentials with strong passwords and inject them securely using environment variables (`.env`).
+---
+
+
 ## 🛠️ Requirements & Tech Stack
 
 * **Docker & Docker Compose** (Required)
