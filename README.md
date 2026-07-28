@@ -1,58 +1,105 @@
-# Spring MVC & JPA User CRUD Application
+# Spring Boot User CRUD Application
 
-A CRUD web application built using **Core Spring Framework (Spring MVC, Spring ORM)**, **Jakarta Persistence API (Hibernate)**, **Thymeleaf**, and **Apache Tomcat**, without using Spring Boot.
+A simple CRUD web application built with:
 
-The entire stack (Apache Tomcat web server and MySQL database) is containerized with **Docker**, allowing you to run and test the application with a single command.
+- Spring Boot
+- Spring Data JPA
+- Thymeleaf
+- MySQL
+- Docker / Docker Compose
 
----
+The app lets you create, edit, list, and delete users through a browser UI.
 
-## 🔒 Security & Local Environment Notes
+## Project structure
 
-* **Local Configuration:** The database setup (`MYSQL_ALLOW_EMPTY_PASSWORD=yes`) is configured strictly for quick local development, testing, and grading.
-* **Database Isolation:** All services run within an isolated local Docker network and are not exposed to external production environments.
-* **Production Deployment:** For production environments, ensure you replace default local credentials with strong passwords and inject them securely using environment variables (`.env`).
----
+- Main application class: `src/main/java/SpringBootApplication.java`
+- Controller: `src/main/java/controller/UserController.java`
+- Repository: `src/main/java/dao/UserRepository.java`
+- Service: `src/main/java/service/UserServiceImpl.java`
+- Entity: `src/main/java/model/User.java`
+- Templates: `src/main/resources/templates/`
+- Boot config: `src/main/resources/application.properties`
 
+## Requirements
 
-## 🛠️ Requirements & Tech Stack
+- Java 21
+- Maven
+- Docker and Docker Compose
 
-* **Docker & Docker Compose** (Required)
----
+## Local configuration
 
-## 🚀 Getting Started (Docker Compose)
+The application reads database settings from environment variables:
 
-The easiest way to run and test the full application is using Docker Compose. It automatically compiles the Spring MVC `.war` artifact via a multi-stage build, provisions the MySQL database, wires up the environment variables, and deploys the app to Apache Tomcat.
+- `DB_URL`
+- `DB_USER`
+- `DB_PASSWORD`
 
-### 1. Launch the Application
+`src/main/resources/application.properties` maps those into Spring Boot datasource properties.
 
-Run the following command from the project root directory:
+## Run with Docker
+
+This is the recommended way to run the full stack.
 
 ```bash
 docker compose up --build
 ```
 
-### 2. Access the Application
+The compose setup starts:
 
-Once the containers initialize, open your web browser and navigate to:
+- `db`: MySQL 9.0
+- `app`: Spring Boot application
+
+Then open:
 
 ```text
-http://localhost:8080/
+http://localhost:8080
 ```
 
-### 3. Stop the Application
+## Persistence
 
-To shut down and clean up the containers, press `Ctrl + C` in your terminal or run:
+Database data is stored in the named Docker volume `mysql_data`.
+
+That means the data survives:
+
+- container restarts
+- `docker compose down`
+- rebuilding the app image
+
+Data is removed only if you explicitly delete the volume, for example with:
 
 ```bash
-docker compose down
+docker compose down -v
 ```
 
----
+## Run locally without Docker
 
-## ⚙️ How It Works Under the Hood
+If you want to run the app directly from Maven, make sure MySQL is available and the environment variables are set.
 
-Docker Compose automatically configures the application environment:
+Example:
 
-* **MySQL Database Container:** Spins up a MySQL 9.0 instance, creating the `user_crud_db` database on port `3306` with no root password.
-* **Apache Tomcat Container:** Uses a multi-stage Docker build to package the Maven `.war` file, cleans default Tomcat sample applications, and deploys the app as `ROOT.war` on port `8080`.
-* **Networking & Health Check:** Tomcat waits for the MySQL health check to pass before initializing. The web application dynamically connects to MySQL via internal service discovery (`jdbc:mysql://db:3306/user_crud_db`).
+```bash
+export DB_URL='jdbc:mysql://localhost:3306/user_crud_db?serverTimezone=UTC'
+export DB_USER='root'
+export DB_PASSWORD=''
+mvn spring-boot:run
+```
+
+Then open:
+
+```text
+http://localhost:8080
+```
+
+## Docker details
+
+`Dockerfile` uses a two-stage build:
+
+1. build the Spring Boot jar with Maven
+2. run it on a JRE image with `java -jar`
+
+`docker-compose.yml` also starts a MySQL container and injects the datasource environment variables into the app container.
+
+## Notes
+
+- The current entry point is in the default package. That works here because package scanning is explicit.
+- The app uses Thymeleaf templates under `src/main/resources/templates`, which is Spring Boot’s default location.

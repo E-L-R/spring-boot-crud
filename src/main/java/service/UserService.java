@@ -7,6 +7,5 @@ public interface UserService {
     List<User> findAll();
     void save(User user);
     User findById(Long id);
-    void update(User user);
     void delete(Long id);
 }

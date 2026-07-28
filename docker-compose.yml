@@ -1,10 +1,9 @@
 version: '3.8'
 
 services:
-  # 1. MySQL Database Service
   db:
     image: mysql:9.0
-    container_name: mysql-db
+    container_name: mysql-db-boot
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: user_crud_db
@@ -18,14 +17,12 @@ services:
       timeout: 5s
       retries: 10
 
-  # 2. Spring MVC Web App Service (Tomcat)
-  web:
+  app:
     build: .
-    container_name: spring-mvc-app
+    container_name: spring-boot-app
     ports:
       - "8080:8080"
     environment:
-      # Use 'db' as the hostname because Docker networks resolve service names automatically!
       DB_URL: "jdbc:mysql://db:3306/user_crud_db?serverTimezone=UTC"
       DB_USER: "root"
       DB_PASSWORD: ""
