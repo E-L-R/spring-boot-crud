@@ -1,5 +1,6 @@
 package service;
 
+import dto.UpdateUserRequest;
 import dao.UserRepository;
 import lombok.RequiredArgsConstructor;
 import model.User;
@@ -30,6 +31,22 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void update(Long id, UpdateUserRequest request) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return;
+        }
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setAge(request.getAge());
+
+        userRepository.save(user);
     }
 
     @Override
